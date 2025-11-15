@@ -11,6 +11,7 @@ format:
 library(tidyverse)
 library(sf)
 library(units)
+library(gt)
 
 # Read in 2024 General Election Data (precinct level)
 raw_precinct <- read_csv("data/g24_sov_by_g24_svprec.csv")
@@ -216,7 +217,7 @@ summary_table <- tibble(
 
 ```
 
-```{r}
+```{r, echo = FALSE}
 # 2024 Election results
 
 district_votes_2024 <- district_votes_2024 |>
@@ -228,7 +229,7 @@ district_map_2024 <- ab604_shp |>
   mutate(
     winner = ifelse(dem_votes > rep_votes, "Democrat", "Republican"))
 # Plot map
-ggplot(district_map_2024) +
+district_map_2024_plot <- ggplot(district_map_2024) +
   geom_sf(aes(fill = winner), color = "black") +
   scale_fill_manual(values = c("Democrat" = "blue", "Republican" = "red")) +
   labs(title = "2024 Congressional Districts by Winning Party") +
@@ -245,9 +246,44 @@ district_map_ab604 <- ab604_shp |>
   mutate(
     winner = ifelse(PRSDEM01_alloc > PRSREP01_alloc, "Democrat", "Republican"))
 # Plot map
-ggplot(district_map_ab604) +
+district_map_ab604_plot <- ggplot(district_map_ab604) +
   geom_sf(aes(fill = winner), color = "black") +
   scale_fill_manual(values = c("Democrat" = "blue", "Republican" = "red")) +
   labs(title = "2024 Election Results by Proposed AB 604 Districts") +
   theme_minimal()
+```
+
+# Methodology
+
+**Data Source:**  
+The data used was precinct-level election results from the 2024 general election. The data was obtained through csv files from official state election records
+
+**Data Cleaning**
+The precinct level data included likely missing data indicated by *** which I replaced with NA values. Also, I excluded precincts with over 10,000 votes, as precincts are typically much smaller. Any with more than 10,000 likely represented aggregated results such as total results of the county.
+
+**Estimation Process:**  
+- **District-Level Aggregation:** Votes were summed by congressional district for both the 2024 results and the hypothetical AB 604 map.  
+- **Mean-Median Score:** Calculated as the difference between the mean and median of the Democratic vote share across districts.  
+- **Efficiency Gap:** Wasted votes were computed for each district, and the efficiency gap was calculated as the net difference in wasted votes divided by total votes.
+
+**Caveats**
+It's important to note that a single measure such as mean-median score or efficiency gap cannot tell you everything about the likelihood of gerrymandering. These metrics must be interpreted in the context of the data and compared with other metrics.
+
+# Maps and Summary Table
+
+## Maps {.column}
+
+### 2024 District Results
+```{r}
+district_map_2024_plot
+```
+
+### Proposed AB 604 Results
+```{r}
+district_map_ab604_plot
+```
+
+## Gerrymandering Metrics Summary
+```{r}
+knitr::kable(summary_table)
 ```
