@@ -1,0 +1,776 @@
+arrange(in_state_total)|>
+slice(1:3)|>
+select(name, in_state_total)
+tuition_cost |>#
+arrange(out_of_state_total)|>#
+slice(1:3)|>#
+select(name, out_of_state_total)
+tuition_cost |>
+group_by(state_code)|>
+summarize(avg_in_state_tuition = mean(in_state_tuition))|>
+ggplot(x = state_code, y = avg_in_state_tuition)
+tuition_cost |>#
+group_by(state_code)|>#
++ summarize(avg_in_state_tuition = mean(in_state_tuition))|>#
++ ggplot(x = state_code, y = avg_in_state_tuition)
+tuition_cost |>#
+group_by(state_code)|>#
+summarize(avg_in_state_tuition = mean(in_state_tuition))|>#
+ggplot(x = state_code, y = avg_in_state_tuition)
+tuition_cost |>#
+group_by(state_code)|> filter(type == public) |>#
+summarize(avg_in_state_tuition = mean(in_state_tuition))|>#
+ggplot(aes(x = state_code, y = avg_in_state_tuition))+
+geom_bar()
+tuition_cost |>#
+  filter(type == "Public") |>#
+  group_by(state_code) |>#
+  summarize(avg_in_state_tuition = mean(in_state_tuition, na.rm = TRUE)) |>#
+  ggplot(aes(x = state_code, y = avg_in_state_tuition)) +#
+  geom_bar()
+tuition_cost |>#
+  filter(type == "Public") |>#
+  group_by(state_code) |>#
+  summarize(avg_in_state_tuition = mean(in_state_tuition, na.rm = TRUE)) |>#
+  ggplot(aes(x = state_code, y = avg_in_state_tuition)) +#
+  geom_bar(stat = "identity")
+tuition_cost |>#
+  filter(type == "Public") |>#
+  group_by(state_code) |>#
+  summarize(avg_in_state_tuition = mean(in_state_tuition, na.rm = TRUE)) |>#
+arrange(desc(in_state_tuition))|>  ggplot(aes(x = state_code, y = avg_in_state_tuition)) +#
+  geom_bar(stat = "identity")
+tuition_cost |>#
+  filter(type == "Public") |>#
+  group_by(state_code) |>#
+  summarize(avg_in_state_tuition = mean(in_state_tuition, na.rm = TRUE)) |>#
+  arrange(desc(avg_in_state_tuition)) |>#
+  ggplot(aes(x = reorder(state_code, -avg_in_state_tuition), y = avg_in_state_tuition)) +#
+  geom_bar(stat = "identity")
+tuition_cost |>#
+  filter(type == "Public") |>#
+  group_by(state_code) |>#
+  summarize(avg_in_state_tuition = mean(in_state_tuition, na.rm = TRUE)) |>#
+  arrange(desc(avg_in_state_tuition)) |>#
+  ggplot(aes(x = reorder(state_code, -avg_in_state_tuition), y = avg_in_state_tuition)) +#
+  geom_bar(stat = "identity") +#
+  labs(title = "Average In-State Tuition for Public Schools by State",#
+       x = "State",#
+       y = "Average In-State Tuition") +#
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+tuition_cost_summary <- tuition_cost |>#
+  filter(type == "Public") |>#
+  group_by(state_code) |>#
+  summarize(avg_in_state_tuition = mean(in_state_tuition, na.rm = TRUE)) |>#
+  arrange(desc(avg_in_state_tuition)) |>#
+  mutate(state_code = factor(state_code, levels = state_code))#
+tuition_cost |>#
+  filter(type == "Public") |>#
+  group_by(state_code) |>#
+  summarize(avg_in_state_tuition = mean(in_state_tuition, na.rm = TRUE)) |>#
+  arrange(desc(avg_in_state_tuition)) |>#
+  ggplot(aes(x = reorder(state_code, -avg_in_state_tuition), y = avg_in_state_tuition)) +#
+  geom_bar(stat = "identity") +#
+  labs(title = "Average In-State Tuition for Public Schools by State",#
+       x = "State",#
+       y = "Average In-State Tuition") +#
+  theme(axis.text.x = element_text(angle = 90))
+A <- c("apple", "orange", "apple", "kiwi")
+B <- "apple"
+A == B
+B == A
+A %in% B
+B %in% A
+xa <- c(1, 2, 3)
+xb <- c(x1, x2, x3)
+xb <- c("x1", "x2", "x3")
+df(xa, xb)
+library(stringr)
+len(fruit)
+length(fruit)
+class(fruit)
+library(stringr)#
+#
+# Find the length of each fruit name#
+name_lengths <- str_length(fruit)#
+#
+# Longest fruit name(s)#
+fruit[name_lengths == max(name_lengths)]#
+#
+# Shortest fruit name(s)#
+fruit[name_lengths == min(name_lengths)]
+fruit <- str_replace(fruit, "^currant$", "red currant")
+str_c("My favorite fruits are ", fruit_list, ", and ", fruit[n], ".")
+library(stringr)#
+#
+# Start with the fruit vector#
+n <- length(fruit)#
+#
+# Combine all but the last fruit with commas#
+fruit_list <- str_c(fruit[1:(n-1)], collapse = ", ")#
+#
+# Add the last fruit with "and"#
+sentence <- str_c("My favorite fruits are ", fruit_list, ", and ", fruit[n], ".")#
+#
+sentence
+str_c("My favorite fruits are ", fruit_list, ", and ", fruit[n], ".")
+fruit_list <- str_c(fruit[1:(length(fruit)-1)], collapse = ", ")
+str_c("My favorite fruits are ", fruit_list, ", and ", fruit[n], ".")
+str_c("\U0001F34C ", "banana", " \U0001F34C")
+library(stringr)#
+#
+str_subset(fruit, "berry")
+str_subset(fruit, "o")
+o <- str_subset(fruit, "o")
+length(o)
+library(stringr)#
+#
+# Count how many "o"s are in each fruit name#
+o_counts <- str_count(fruit, "o")#
+#
+# Find the maximum number of "o"s#
+max_o <- max(o_counts)#
+#
+# Get all fruits that have that many "o"s#
+fruit[o_counts == max_o]
+max_o
+a_a <- c(1,2)
+a_a <- str_subset(fruit, "a//wa")
+a_a
+a_a <- str_subset(fruit, "a.a")
+a_a
+length(a_a)
+library(babynames)
+install.packages("babynames")
+library(babynames)
+babynames
+?babynames
+range(babynames$year)
+babynames |>
+filter(year == 2010)|
+)
+babynames |>#
++ filter(year == 2010)
+babynames |> filter(year == 2010)
+library(dplyr)
+babynames |>
+filter(year == 2010) |>
+mutate(ends_with_vowel = str_detect(name, "[aeiouAEIOU]$"))
+vowels_2010 <- babynames |>#
+filter(year == 2010) |>#
+mutate(ends_with_vowel = str_detect(name, "[aeiouAEIOU]$"))
+vowels_2010|>
+)
+vowels_2010 <- babynames |>#
++ filter(year == 2010) |>#
++ mutate(ends_with_vowel = str_detect(name, "[aeiouAEIOU]$"))
+vowels_10 <- babynames |>#
++ filter(year == 2010| year == 1910) |>#
++ mutate(ends_with_vowel = str_detect(name, "[aeiouAEIOU]$"))
+vowels_10 <- babynames |>#
+filter(year == 2010| year == 1910) |>#
+mutate(ends_with_vowel = str_detect(name, "[aeiouAEIOU]$"))
+vowels_10
+vowel_props <- vowels_10 |>
+group_by(year, sex)|>
+summarize(vowel_prop = sum(n[ends_with_vowel])/sum(n))
+vowel_props
+# Define a regular expression pattern for diminutive suffixes#
+diminutive_pattern <- "(ie|y|ey|o|s|sie|sy|ito|ita|ino|ina|ka|ke|cska|cske|ka|chka|enka|usha|akis|oula)$"#
+#
+# Filter the dataset#
+babynames_diminutive <- babynames %>%#
+  filter(str_detect(name, diminutive_pattern))#
+#
+# View the first few rows#
+head(babynames_diminutive)
+rhyme_pattern <- "(aden|ayden|aiden|aidan|aydan)$"
+# Filter for boys' names only (typically Aiden rhymes are boys' names)#
+aiden_rhymes <- babynames %>%#
+  filter(sex == "M" & str_detect(name, rhyme_pattern)) %>%#
+  distinct(name)#
+#
+# Count how many distinct names#
+nrow(aiden_rhymes)
+carson_data <- babynames %>%#
+  filter(name == "Carson")
+ggplot(carson_data, aes(x = year, y = n, color = sex)) +#
+  geom_line(size = 1) +#
+  labs(#
+    title = "Popularity of the Name Carson Over Time",#
+    x = "Year",#
+    y = "Number of Babies",#
+    color = "Sex"#
+  ) +#
+  theme_minimal()
+library(ggplot2)
+ggplot(carson_data, aes(x = year, y = n, color = sex)) +#
+  geom_line(size = 1) +#
+  labs(#
+    title = "Popularity of the Name Carson Over Time",#
+    x = "Year",#
+    y = "Number of Babies",#
+    color = "Sex"#
+  ) +#
+  theme_minimal()
+library(dplyr)#
+library(ggplot2)#
+library(babynames)#
+#
+# Filter for boys named Carson#
+carson_boys <- babynames %>%#
+  filter(name == "Carson", sex == "M")#
+#
+# Plot popularity over time (number of babies)#
+ggplot(carson_boys, aes(x = year, y = n)) +#
+  geom_line(color = "blue", size = 1) +#
+  labs(#
+    title = "Popularity of the Name Carson (Boys) Over Time",#
+    x = "Year",#
+    y = "Number of Babies"#
+  ) +#
+  theme_minimal()
+ggplot(carson_boys, aes(x = year, y = n)) +#
+   geom_line() +#
+   labs(#
+     title = "Popularity of the Name Carson (Boys) Over Time",#
+     x = "Year",#
+     y = "Number of Babies"#
+   )
+george_data <- babynames %>%#
+  filter(name == "George", sex == "M")
+ggplot(george_data, aes(x = year, y = prop)) +#
+  geom_line(color = "darkgreen", size = 1) +#
+  labs(#
+    title = "Relative Frequency of the Name George Over Time",#
+    x = "Year",#
+    y = "Proportion of Boys Named George"#
+  ) +#
+  theme_minimal()
+colors()
+all_colors <- colors()
+base_colors <- sub("[0-9]+$", "", all_colors)
+length(unique(base_colors))
+length(unique(sub("[0-9]+$", "", colors())))
+library(stringr)#
+#
+# Split by newline character#
+lines <- str_split(x, "\n")[[1]]  # [[1]] extracts the vector from the list
+x <- "We're goin' up, up, up, it's our moment#
+You know together we're glowing#
+Gonna be, gonna be golden#
+Oh, up, up, up, with our voices#
+\uc601\uc6d0\ud788 \uae68\uc9c8 \uc218 \uc5c6\ub294#
+Gonna be, gonna be golden"
+library(stringr)#
+#
+# Split by newline character#
+lines <- str_split(x, "\n")[[1]]  # [[1]] extracts the vector from the list
+length(lines)
+words <- str_split(x, "\\s+")[[1]]  # split by spaces/newlines
+sum(words == "up")
+library(stringr)#
+#
+words <- str_split(x, "\\s+")[[1]]#
+num_up <- sum(words == "up")#
+num_up
+library(stringr)#
+#
+text <- "up upbeat popup up."#
+#
+# Without \b#
+str_count(text, "up")#
+#> 5  (matches "up" in "up", "upbeat", "popup", "up")#
+#
+# With \b (word boundary)#
+str_count(text, "\\bup\\b")#
+#> 2  (matches only the standalone "up" words)
+words <- str_split(x, "\\s+|,")[[1]]#
+sum(tolower(words) == "up")
+str_count(x, "\\bup\\b")
+library(stringr)#
+#
+# Split into words (split by any non-letter character)#
+words <- str_split(x, "[^A-Za-z]+")[[1]]#
+#
+# Remove any empty strings that might appear#
+words <- words[words != ""]#
+#
+# Convert to lowercase so capitalization doesn't matter#
+words_lower <- tolower(words)#
+#
+# Find distinct 4-letter words#
+four_letter <- unique(words_lower[nchar(words_lower) == 4])#
+#
+# View and count them#
+four_letter#
+length(four_letter)
+x_expanded <- x |>#
+  str_replace_all("(?i)we're", "we are") |>#
+  str_replace_all("(?i)it's", "it is") |>#
+  str_replace_all("(?i)goin'", "going") |>#
+  str_replace_all("(?i)gonna", "going to")#
+#
+x_expanded
+lines <- str_split(x, "\n")[[1]]#
+#
+# Count number of words per line#
+word_counts <- str_count(lines, "\\b[A-Za-z']+\\b")#
+#
+word_counts
+library(stringr)#
+#
+lines <- str_split(x, "\n")[[1]]#
+#
+word_counts <- c()  # empty vector#
+#
+for (line in lines) {#
+  words <- str_split(line, "\\s+")[[1]]  # split by spaces#
+  word_counts <- c(word_counts, length(words))  # count how many#
+}#
+#
+word_counts
+golden_korean <- "\uACE8\uB4DC"#
+golden_korean
+# Load tidyverse for general data wrangling#
+library(tidyverse)#
+#
+# URL for Pride and Prejudice#
+url <- "https://www.gutenberg.org/cache/epub/1342/pg1342.txt"#
+#
+# Read the text into R (each line becomes one element of a character vector)#
+pride <- read_lines(url)#
+#
+# Take a quick look at the first few lines#
+head(pride)
+pride <- read_Lines(https://www.gutenberg.org/cache/epub/1342/pg1342.txt)
+pride <- read_Lines("https://www.gutenberg.org/cache/epub/1342/pg1342.txt")
+pride <- read_lines("https://www.gutenberg.org/cache/epub/1342/pg1342.txt")
+head(pride)
+length(pride)
+library(dplyr)#
+#
+# Convert the vector to a tibble#
+pride_df <- tibble(text = pride)
+head(pride_df)
+library(dplyr)#
+library(stringr)#
+#
+# Step 0: Convert the vector to a tibble#
+pride_df <- tibble(text = pride)#
+#
+# Step 1: Remove empty lines#
+pride_df <- pride_df %>%#
+  filter(text != "")#
+#
+# Step 2: Remove lines before the story starts#
+# Find the first line of the actual story#
+start_line <- which(str_detect(pride_df$text, "It is a truth"))[1]#
+#
+pride_df <- pride_df %>%#
+  slice(start_line:n())  # keep only lines from the story onwards#
+#
+# Step 3: Remove chapter titles (e.g., "Chapter 1", "CHAPTER I")#
+pride_df <- pride_df %>%#
+  filter(!str_detect(text, "^Chapter|^CHAPTER"))#
+#
+# View first few lines of cleaned text#
+head(pride_df)
+pride_df |>
+mutate(nchar = str_count(text), nword = str_count(text, boundary("word")))|>
+arrange(desc(nword))
+pride_df |>#
+mutate(nchar = str_count(text), nword = str_count(text, boundary("word")))|>#
+arrange(desc(nchar))
+pride_df |>#
++ mutate(nchar = str_count(text))|>
+arrange(desc(nchar))
+pride_df |>#
++ mutate(nchar = str_count(text))|>#
++ arrange(desc(nchar))
+pride_df |>#
+mutate(nchar = str_count(text))|>#
+arrange(desc(nchar))
+library(tidytext)
+install.packages("tidytext")
+library(tidytext)
+# Load libraries#
+library(tidyverse)#
+library(tidytext)#
+#
+# Step 1: Read the text from Project Gutenberg#
+url <- "https://www.gutenberg.org/cache/epub/1342/pg1342.txt"#
+pride <- read_lines(url)#
+#
+# Step 2: Convert to tibble#
+pride_df <- tibble(text = pride)#
+#
+# Step 3: Clean the text#
+pride_df <- pride_df %>%#
+  filter(text != "") %>%                                 # remove empty lines#
+  slice(which(str_detect(text, "It is a truth"))[1]:n()) %>%  # keep only story text#
+  filter(!str_detect(text, "^Chapter|^CHAPTER"))        # remove chapter titles#
+#
+# Step 4: Tokenize the text (one word per row)#
+pride_tokens <- pride_df %>%#
+  unnest_tokens(word, text)#
+#
+# Optional: Remove stopwords#
+pride_tokens <- pride_tokens %>%#
+  anti_join(get_stopwords(), by = "word")#
+#
+# Step 5: Count token frequencies#
+token_counts <- pride_tokens %>%#
+  count(word, sort = TRUE)#
+#
+# Step 6: Select top 15 tokens#
+top_tokens <- token_counts %>% slice_max(n, n = 15)#
+#
+# Step 7: Plot top 15 tokens#
+ggplot(top_tokens, aes(x = reorder(word, n), y = n)) +#
+  geom_col(fill = "steelblue") +#
+  coord_flip() +#
+  labs(title = "Top 15 Tokens in Pride and Prejudice",#
+       x = "Token",#
+       y = "Frequency")
+pride_tokens <- pride_df %>%#
+  unnest_tokens(word, text)#
+#
+# Step 5: Count token frequencies (include stopwords)#
+token_counts <- pride_tokens %>%#
+  count(word, sort = TRUE)#
+#
+# Step 6: Select top 15 tokens#
+top_tokens <- token_counts %>% slice_max(n, n = 15)#
+#
+# Step 7: Plot top 15 tokens#
+ggplot(top_tokens, aes(x = reorder(word, n), y = n)) +#
+  geom_col(fill = "steelblue") +#
+  coord_flip() +#
+  labs(title = "Top 15 Tokens in Pride and Prejudice (Including Stopwords)",#
+       x = "Token",#
+       y = "Frequency")
+# Step 4: Tokenize the text (one word per row)#
+pride_tokens <- pride_df %>%#
+  unnest_tokens(word, text)#
+#
+# NEW STEP: Remove stopwords#
+pride_tokens <- pride_tokens %>%#
+  anti_join(get_stopwords(), by = "word")#
+#
+# Step 5: Count token frequencies (same as before)#
+token_counts <- pride_tokens %>%#
+  count(word, sort = TRUE)#
+#
+# Step 6 & 7: Top 15 tokens and plot (same as before)#
+top_tokens <- token_counts %>% slice_max(n, n = 15)#
+#
+ggplot(top_tokens, aes(x = reorder(word, n), y = n)) +#
+  geom_col(fill = "steelblue") +#
+  coord_flip() +#
+  labs(title = "Top 15 Tokens in Pride and Prejudice (Stopwords Removed)",#
+       x = "Token",#
+       y = "Frequency")
+fruit <- c("apple", "banana")
+str_detect(fruit, pattern = "an")
+str_view(fruit, pattern = "an")
+str_view(fruit, pattern = "ap")
+str_view(fruit, pattern = "a")
+install.packages("leaflet")
+install.packages("gt")
+install.packages("httr2")
+library(shiny)
+library(sf)
+l1 <- st_linestring(matrix(c(0,0,1,1), ncol = 2, byrow = TRUE))
+l2 <- st_linestring(matrix(c(0,1,1,0), ncol = 2, byrow = TRUE))
+plot(l1, col = "blue", lwd = 2, xlim = c(0,1), ylim = c(0,1))
+plot(l1, lwd = 2, xlim = c(0,1), ylim = c(0,1))
+plot(l2, lwd = 2, add = TRUE)
+plot(l1, col = "blue", lwd = 2, xlim = c(0, 1), ylim = c(0, 1))#
+plot(l2, col = "red", lwd = 2, add = TRUE)
+plot(l1, lwd = 2, xlim = c(0, 1), ylim = c(0, 1))#
+plot(l2, lwd = 2, add = TRUE)
+l1 <- st_linestring(matrix(c(0, 0, 1, 1), ncol = 2, byrow = TRUE))#
+l2 <- st_linestring(matrix(c(0, 1, 1, 0), ncol = 2, byrow = TRUE))#
+#
+my_lines <- st_sf(#
+  id = 1:2,#
+  geom = st_sfc(l1, l2, crs = "OGC:CRS84")#
+)
+my_lines
+# Diamond coordinates (repeat the first point at the end to close the shape)#
+diamond_coords <- matrix(#
+  c(0.5, 0.8,#
+    0.3, 0.5,#
+    0.5, 0.2,#
+    0.7, 0.5,#
+    0.5, 0.8),  # close polygon#
+  ncol = 2,#
+  byrow = TRUE#
+)#
+#
+# Create polygon and sf object#
+diamond <- st_polygon(list(diamond_coords))#
+my_diamond <- st_sf(#
+  price = 100,#
+  geom = st_sfc(diamond, crs = "OGC:CRS84")#
+)#
+#
+# Plot#
+plot(st_geometry(my_lines))#
+plot(st_geometry(my_diamond), add = TRUE, col = rgb(1, 0, 0, 0.5))
+my_lines |>#
+  mutate(dim = st_dimension(geom))
+tidyverse
+library(tidyverse)
+my_lines |>#
+  mutate(dim = st_dimension(geom))
+my_lines |>#
++   mutate(dim = st_dimension(geom),)
+my_lines |>#
++   mutate(dim = st_dimension(geom),
+my_lines |> mutate(dim = st_dimension(geom))
+my_lines |>#
+mutate(dim = st_dimension(geom),
+length = st_length(geom))
+my_lines |>#
+mutate(dim = st_dimension(geom),#
+length = st_length(geom),
+area = st_area(geom))
+my_diamond |>#
+mutate(dim = st_dimension(geom),#
+length = st_length(geom),#
+area = st_area(geom))
+library(lwgeom)
+install.packages("lwgeom")
+split_diamond <- st_split(my_diamond, my_lines)#
+#
+# Extract each resulting polygon into its own feature (row)#
+split_diamond <- split_diamond |>#
+  st_collection_extract("POLYGON")#
+#
+# Plot with colors#
+plot(st_geometry(split_diamond), col = c("skyblue", "tomato", "palegreen", "gold"))
+library(lwgeom)
+split_diamond <- st_split(my_diamond, my_lines)#
+#
+# Extract each resulting polygon into its own feature (row)#
+split_diamond <- split_diamond |>#
+  st_collection_extract("POLYGON")#
+#
+# Plot with colors#
+plot(st_geometry(split_diamond), col = c("skyblue", "tomato", "palegreen", "gold"))
+split_diamond <- st_split(my_diamond, my_lines)#
+#
+# Extract each resulting polygon into its own feature (row)#
+split_diamond <- split_diamond |>#
+  st_collection_extract("POLYGON")#
+#
+# Plot with colors#
+plot(st_geometry(split_diamond), col = c("skyblue", "tomato", "green", "gold"))
+split_diamond$yield <- c(10, 20, 30, 40)#
+split_diamond$split_price <- round(#
+  as.numeric(st_area(split_diamond) / sum(st_area(split_diamond)) * my_diamond$price),#
+  2)#
+split_diamond
+my_cents <- st_centroid(split_diamond)#
+#
+plot(st_geometry(split_diamond), col = c("skyblue", "tomato", "palegreen", "gold"))#
+plot(st_geometry(my_cents), add = TRUE, col = "black", pch = 16)
+# 1. Find the bottom-most centroid (smallest y coordinate)#
+bottom_index <- which.min(st_coordinates(my_cents)[, 2])#
+#
+# 2. Remove that centroid#
+my_cents_up <- my_cents[-bottom_index, ]#
+#
+# 3. Take the union of the three remaining centroids#
+my_union <- st_union(my_cents_up)#
+#
+# 4. Form a convex hull (triangle) from them#
+my_tri_up <- st_convex_hull(my_union)#
+#
+# 5. Plot it on top of your split diamonds#
+plot(st_geometry(split_diamond), col = c("skyblue", "tomato", "palegreen", "gold"))#
+plot(st_geometry(my_tri_up), add = TRUE, border = "black", lwd = 2)
+# 1. Find the top-most centroid (largest y coordinate)#
+top_index <- which.max(st_coordinates(my_cents)[, 2])#
+#
+# 2. Remove that centroid#
+my_cents_down <- my_cents[-top_index, ]#
+#
+# 3. Take the union of the three remaining centroids#
+my_union_down <- st_union(my_cents_down)#
+#
+# 4. Form a convex hull (triangle) from them#
+my_tri_down <- st_convex_hull(my_union_down)#
+#
+# 5. Plot it on top of your split diamonds#
+plot(st_geometry(split_diamond), col = c("skyblue", "tomato", "palegreen", "gold"))#
+plot(st_geometry(my_tri_down), add = TRUE, border = "black", lwd = 2)
+# st_intersects returns a sparse matrix#
+intersections <- st_intersects(split_diamond, my_tri_up)#
+#
+# Convert to logical vector#
+intersect_logical <- lengths(intersections) > 0#
+#
+# See which rows intersect#
+split_diamond[intersect_logical, ]
+joined <- st_join(split_diamond, my_tri_up, join = st_intersects)
+library(sf)#
+#
+# Perform a spatial join: add attributes from my_tri_up to split_diamond where they intersect#
+joined <- st_join(split_diamond, my_tri_up, join = st_intersects)#
+#
+# Inspect the result#
+joined
+library(sf)
+library(sf)#
+#
+# Perform a spatial join: add attributes from my_tri_up to split_diamond where they intersect#
+joined <- st_join(split_diamond, my_tri_up, join = st_intersects)#
+#
+# Inspect the result#
+joined
+library(sf)#
+#
+# Perform a spatial join: add attributes from my_tri_up to split_diamond where they intersect#
+joined <- st_join(split_diamond, my_tri_up, join = st_intersects)
+# Convert my_tri_up to an sf object (even with no attributes)#
+my_tri_up_sf <- st_sf(geometry = my_tri_up)#
+#
+# Now perform the spatial join#
+joined <- st_join(split_diamond, my_tri_up_sf, join = st_intersects)#
+#
+# Check which diamonds intersect#
+intersecting <- !is.na(joined$geometry.1)  # the joined geometry column may be named geometry.1#
+split_diamond[intersecting, ]
+# Make sure my_tri_up is an sf object#
+my_tri_up_sf <- st_sf(geometry = my_tri_up)#
+#
+# Spatial inner join: keep only diamonds that intersect the triangle#
+intersecting_diamonds <- split_diamond |>#
+  st_join(my_tri_up_sf, join = st_intersects, left = FALSE)#
+#
+# View result#
+intersecting_diamonds
+# Make sure it's an sf object#
+my_tri_up_sf <- st_sf(geometry = my_tri_up)#
+#
+# Direct area#
+area_direct <- st_area(my_tri_up_sf)#
+area_direct
+# Spatial intersection of diamonds and triangle#
+intersections <- st_intersection(split_diamond, my_tri_up_sf)#
+#
+# Sum of the areas of the intersected pieces#
+area_interpolated <- sum(st_area(intersections))#
+area_interpolated
+# Make sure triangle is an sf object#
+my_tri_up_sf <- st_sf(geometry = my_tri_up)#
+#
+# Intersect split diamonds with the triangle#
+inter_up <- st_intersection(split_diamond, my_tri_up_sf)#
+#
+# Weighted yield: sum(yield * area of intersection) / total area of triangle#
+yield_up <- sum(inter_up$yield * st_area(inter_up)) / sum(st_area(inter_up))#
+yield_up
+my_tri_down_sf <- st_sf(geometry = my_tri_down)#
+#
+inter_down <- st_intersection(split_diamond, my_tri_down_sf)#
+#
+yield_down <- sum(inter_down$yield * st_area(inter_down)) / sum(st_area(inter_down))#
+yield_down
+library(tidyverse)
+library(lubridate)
+mdy_hm("Jan 1, 1970 12:01 am")
+dmy_hm("Jan 1, 1970 12:01 am")
+dmy_hm("Jan 1, 1970 00:01")
+dmy_hm("1-1-1970 12:01 am")
+dmy_hm("1-1-1970 00:01")
+mdy_hm("Jan 1, 1970 00:01")
+mdy_hm("1-1-1970 00:01")
+dmy_hm("1, Jan, 1970 00:01")
+Date Time(UTC)
+as.POSIXct(x = "Jan 1, 1970 12:01 am", format = "%b%d,%y,%I:%M%p")
+as.POSIXct(x = "Jan 1, 1970 12:01 am", format = "% b % d, % y, % I: % M % p")
+as.POSIXct(x = "Jan 1, 1970 12:01 am", format = "%b %d, %y, %I:%M %p", tz = UTC)
+as.POSIXct(x = "Jan 1, 1970 12:01 am", format = "%b %d, %y, %I:%M %p", tz = "UTC")
+as.POSIXct(x = "Jan 1, 1970 12:01 am", #
+           format = "%b %d, %Y %I:%M %p",  #
+           tz = "UTC")
+> as.POSIXct(x = "Jan 1, 1970 12:01 am", format = "%b %d, %Y %I:%M %p", tz = "UTC")#
+[1] NA
+as.POSIXct(x = "Jan 1, 1970 12:01 am", format = "%b %d, %Y %I:%M %p", tz = "UTC")
+as.POSIXct(x = "Jan 1, 1970 12:01 am", "%b %d, %Y %I:%M %p")
+format(as.POSIXct("2000-01-01 00:00:00", tz = "UTC"), "%Y-%m-%d %H:%M%S")
+mdy("Nov 5, 2024")
+mdy(11/5/2025)
+mdy("11/5/2025")
+mdy("11.05.2025")
+now <- sys.time()
+now <- Sys.time()
+now
+month(now)
+wday(now, label = TRUE, abbr = FALSE)
+wday(now, label = FALSE, abbr = FALSE)
+wday(now)
+a <- today()
+a
+b <- ymd("2004-05-25")
+b
+a-b
+format(a-b, %Y)
+format(a-b, "%Y")
+as.duration(a-b)
+dhours(c("12,24"))
+dhours(c(12,24))
+hours(c(12,45))
+p1 <- st_point(c(7.35, 52.31))#
+p2 <- st_point(c(7.22, 52.18))#
+p3 <- st_point(c(7.44, 52.19))#
+point_sfc <- st_sfc(list(p1, p2, p3), crs = 'OGC:CRS84')#
+point_sfc
+library(sf)
+p1 <- st_point(c(7.35, 52.31))#
+p2 <- st_point(c(7.22, 52.18))#
+p3 <- st_point(c(7.44, 52.19))#
+point_sfc <- st_sfc(list(p1, p2, p3), crs = 'OGC:CRS84')#
+point_sfc
+plot(st_geometry(point_sfc), pch = 16)
+my_point_sf <- st_sf(elev = c(33.2, 52.1, 81.2), #
+                     marker = c("Id01", "Id02", "Id03"),#
+                     geom = point_sfc)#
+my_point_sf
+plot(st_geometry(my_point_sf), pch = 16)
+install.packages("glue")
+library(glue)
+ls("package:glue")
+# Define the function#
+hello <- function(x) {#
+  print(paste0("Hello ", x, "!"))#
+}#
+#
+# Example: run the function#
+hello("Carson")
+package.skeleton(#
+  name = "greetr",#
+  code_files = NULL,  # NULL because we already have hello() in environment#
+  functions = c("hello")#
+)
+package.skeleton(#
+  name = "greetr",#
+  list = c("hello")#
+)
+# From your working directory (the parent of greetr/)#
+R CMD build greetr
+install.packages("greetr_0.1.0.tar.gz", repos = NULL, type = "source")#
+library(greetr)#
+hello("Carson")
+install.packages("units")
+library(units)
+install.packages("sf")
+library(sf)
+setwd("~/Documents/stat133/gerrymandering-carsonkuehnert")
+cd
+pwd
+ls

@@ -33,7 +33,12 @@ votes <- tibble(District = 1:5,
 Calculate the mean-median score associated with this particular district breakdown of votes.
 
 ```{r}
-# add code for Q1 here
+votes <- votes |>
+    mutate(v_i = d_votes / (d_votes + r_votes)) |>
+    summarize(mean_v = mean(v_i),
+    med_v = median(v_i))|>
+    mutate(mean_v - med_v)
+votes
 ```
 
 ### Q2. Efficiency Gap
@@ -44,5 +49,31 @@ Calculate the Efficiency Gap (EG) associated with this particular district break
 
 
 ```{r}
-# add code for Q2 here
+library(tidyverse)
+
+# Original votes tibble
+votes <- tibble(
+  District = 1:5,
+  d_votes = c(62, 55, 44, 47, 46),
+  r_votes = c(38, 45, 56, 53, 54),
+  result = c(rep("D wins", 2), rep("R wins", 3))
+)
+
+EG_data <- votes |>
+  mutate(
+    total = .data$d_votes + .data$r_votes,
+    needed_to_win = floor(total / 2) + 1,
+    wasted_d = if_else(.data$d_votes > .data$r_votes, .data$d_votes - needed_to_win, .data$d_votes),
+    wasted_r = if_else(.data$r_votes > .data$d_votes, .data$r_votes - needed_to_win, .data$r_votes)
+  ) |>
+  summarize(
+    wasted_d_total = sum(wasted_d),
+    wasted_r_total = sum(wasted_r),
+    total_votes = sum(total)
+  )
+
+EG <- (EG_data$wasted_d_total - EG_data$wasted_r_total) / EG_data$total_votes
+EG
+
+
 ```

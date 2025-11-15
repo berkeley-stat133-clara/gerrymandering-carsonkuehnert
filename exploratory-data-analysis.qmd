@@ -2,27 +2,118 @@
 title: Exploratory Data Analysis
 format: typst
 ---
+```{r, echo = FALSE}
+# Libraries
+library(tidyverse)
+library(sf)
+library(units)
+
+# Read in 2024 General Election Data (precinct level)
+raw_precinct <- read_csv("data/g24_sov_by_g24_svprec.csv")
+
+# Columns that had * in them
+cols_with_star <- c(
+  "ASSAIP01", "ASSDEM01", "ASSDEM02", "ASSREP01", "ASSREP02",
+  "CNGDEM01", "CNGDEM02", "CNGIND01", "CNGREP01", "CNGREP02",
+  "PRSAIP01", "PRSDEM01", "PRSGRN01", "PRSLIB01", "PRSPAF01", "PRSREP01",
+  "PR_2_N", "PR_2_Y", "PR_32_N", "PR_32_Y", "PR_33_N", "PR_33_Y",
+  "PR_34_N", "PR_34_Y", "PR_35_N", "PR_35_Y", "PR_36_N", "PR_36_Y",
+  "PR_3_N", "PR_3_Y", "PR_4_N", "PR_4_Y", "PR_5_N", "PR_5_Y",
+  "PR_6_N", "PR_6_Y",
+  "SENDEM01", "SENDEM02", "SENREP01", "SENREP02",
+  "USPDEM01", "USPREP01",
+  "USSDEM01", "USSREP01")
+
+# Turn * into NA
+precinct_election <- raw_precinct |>
+  mutate(across(
+    all_of(cols_with_star),
+    ~ .x |>
+      as.character() |>    
+      str_trim() |>        
+      na_if("*") |>        # replace * with NA
+      as.numeric()))
+
+# Remove precincts with absurdly high number of voters (likely total county or something instead of actual precinct numbers)
+
+# Filter out precincts with greater than 10,000 votes
+precinct_election <- precinct_election |>
+  mutate(
+    precinct_size = PRSDEM01 + PRSREP01 + PRSAIP01 + PRSGRN01 + PRSLIB01 + PRSPAF01) |>
+  filter(precinct_size <= 10000)
+```
 
 ### Question 1
 
-Put your question here.
+What are the top 3 counties in terms of proportion of votes for third party (non Democrat or Republican) canidates in the presidential election? 
 
 ### Answer 1
+```{r}
+most_third_party <- precinct_election |>
+  mutate(
+    TOTAL_PRES = PRSDEM01 + PRSREP01 + PRSGRN01 + PRSLIB01 + PRSPAF01 + PRSAIP01,
+    third_party = TOTAL_PRES - (PRSDEM01 + PRSREP01)) |>
+  group_by(COUNTY) |>
+  summarize(
+    third_party_prop = sum(third_party, na.rm = TRUE) / 
+                       sum(TOTAL_PRES, na.rm = TRUE)) |>
+  arrange(desc(third_party_prop)) |>
+  slice_head(n = 3)
+most_third_party
+```
 
-Put your answer here.
+Counties 12, 1, and 23 had the highest proportion of votes cast for third party candidates at 4.46%, 4.40%, and 4.17%, respectively.
 
 ### Question 2
 
-Put your question here.
+What is the distribution of Republican presidential vote share across precincts?
 
 ### Answer 2
+```{r}
+# Summary Statistics
+precinct_election |>
+  mutate(
+    TOTAL_PRES = PRSDEM01 + PRSREP01 + PRSAIP01 + PRSGRN01 + PRSLIB01 + PRSPAF01,
+    rep_share = PRSREP01 / TOTAL_PRES) |>
+  summarize(
+    mean_rep_share = mean(rep_share, na.rm = TRUE),
+    median_rep_share = median(rep_share, na.rm = TRUE),
+    sd_rep_share = sd(rep_share, na.rm = TRUE),
+    min_rep_share = min(rep_share, na.rm = TRUE),
+    max_rep_share = max(rep_share, na.rm = TRUE),
+    n_precincts = n())
 
-Put your answer here.
+# Plot
+precinct_election |>
+  mutate(
+    TOTAL_PRES = PRSDEM01 + PRSREP01 + PRSAIP01 + PRSGRN01 + PRSLIB01 + PRSPAF01,
+    rep_share = PRSREP01 / TOTAL_PRES) |>
+  ggplot(aes(x = rep_share)) +
+  geom_histogram(bins = 40) +
+  labs(
+    title = "Distribution of Republican Presidential Vote Share Across Precincts",
+    x = "Republican Vote Share",
+    y = "Count of Precincts")
+```
+
+The distribution of republican presidential votes was very slightly right skewed, and the mean proportion of votes for republicans in precincts was 0.459, suggesting that Trump was a minority in the majority of California precincts in the 2024 presidential election.
 
 ### Question 3
 
-Put your question here.
+What is the distribution of precinct sizes?
 
 ### Answer 3
+```{r}
+precinct_election |>
+  mutate(
+    precinct_size = PRSDEM01 + PRSREP01 + PRSAIP01 + PRSGRN01 + PRSLIB01 + PRSPAF01) |>
+  summarize(
+    mean_precinct_size = mean(precinct_size, na.rm = TRUE),
+    median_precinct_size = median(precinct_size, na.rm = TRUE),
+    sd_precinct_size = sd(precinct_size, na.rm = TRUE),
+    min_precinct_size = min(precinct_size, na.rm = TRUE),
+    max_precinct_size = max(precinct_size, na.rm = TRUE),
+    n_precincts = n())
+```
 
-Put your answer here.
+The average precinct size is 352 and the standard deviation is 570 once filtered out precincts over 10,000 in size.

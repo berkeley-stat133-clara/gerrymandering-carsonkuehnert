@@ -2,4 +2,60 @@
 title: Data Cleaning
 format: typst
 ---
+```{r}
+# Libraries
+library(tidyverse)
+library(sf)
+library(units)
 
+# Read in 2024 General Election Data (precinct level)
+raw_precinct <- read_csv("data/g24_sov_by_g24_svprec.csv")
+```
+
+```{r}
+# View raw data
+View(raw_precinct)
+
+# Columns that had * in them
+cols_with_star <- c(
+  "ASSAIP01", "ASSDEM01", "ASSDEM02", "ASSREP01", "ASSREP02",
+  "CNGDEM01", "CNGDEM02", "CNGIND01", "CNGREP01", "CNGREP02",
+  "PRSAIP01", "PRSDEM01", "PRSGRN01", "PRSLIB01", "PRSPAF01", "PRSREP01",
+  "PR_2_N", "PR_2_Y", "PR_32_N", "PR_32_Y", "PR_33_N", "PR_33_Y",
+  "PR_34_N", "PR_34_Y", "PR_35_N", "PR_35_Y", "PR_36_N", "PR_36_Y",
+  "PR_3_N", "PR_3_Y", "PR_4_N", "PR_4_Y", "PR_5_N", "PR_5_Y",
+  "PR_6_N", "PR_6_Y",
+  "SENDEM01", "SENDEM02", "SENREP01", "SENREP02",
+  "USPDEM01", "USPREP01",
+  "USSDEM01", "USSREP01")
+
+# Turn * into NA
+precinct_election <- raw_precinct |>
+  mutate(across(
+    all_of(cols_with_star),
+    ~ .x |>
+      as.character() |>    
+      str_trim() |>        
+      na_if("*") |>        # replace * with NA
+      as.numeric()))
+View(precinct_election)
+```
+
+```{r}
+# Remove precincts with absurdly high number of voters (likely total county or something instead of actual precinct numbers)
+
+# How many precincts will this filtering remove?
+precinct_election |>
+  mutate(
+    precinct_size = PRSDEM01 + PRSREP01 + PRSAIP01 + PRSGRN01 + PRSLIB01 + PRSPAF01) |>
+  summarize(
+    n_total = n(),
+    n_over_10k = sum(precinct_size > 10000, na.rm = TRUE))
+
+# Filter out precincts with greater than 10,000 votes
+precinct_election <- precinct_election |>
+  mutate(
+    precinct_size = PRSDEM01 + PRSREP01 + PRSAIP01 + PRSGRN01 + PRSLIB01 + PRSPAF01) |>
+  filter(precinct_size <= 10000)
+
+```
